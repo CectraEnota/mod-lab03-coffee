@@ -1,6 +1,10 @@
+// Copyright 2022 UNN-IASR
 #include "Automata.h"
-#include <iostream>
+
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 Automata::Automata() : cash(0), state(OFF) {
     menu = { "Чай", "Латте", "Горячий шоколад", "Капучино", "Эспрессо", "Раф" };
@@ -19,7 +23,7 @@ void Automata::off() {
 }
 
 bool Automata::coin(int amount) {
-    if (state == WAIT || state == ACCEPT) {
+    if ((state == WAIT || state == ACCEPT) && amount >= MIN_COIN) {
         state = ACCEPT;
         cash += amount;
         return true;

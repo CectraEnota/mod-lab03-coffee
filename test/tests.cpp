@@ -1,3 +1,4 @@
+// Copyright 2022 UNN-IASR
 #include <gtest/gtest.h>
 #include "Automata.h"
 
@@ -37,11 +38,11 @@ TEST_F(AutomataTest, CoinInsertion) {
 }
 
 TEST_F(AutomataTest, InvalidCoinInsertion) {
-    EXPECT_FALSE(machine.coin(10)); // Меньше минимальной суммы
+    EXPECT_FALSE(machine.coin(10));  // Меньше минимальной суммы
     EXPECT_EQ(machine.getBalance(), 0);
 
     machine.off();
-    EXPECT_FALSE(machine.coin(20)); // Автомат выключен
+    EXPECT_FALSE(machine.coin(20));  // Автомат выключен
 }
 
 TEST_F(AutomataTest, GetMenu) {
@@ -57,13 +58,13 @@ TEST_F(AutomataTest, GetMenu) {
 
 TEST_F(AutomataTest, SuccessfulChoice) {
     machine.coin(50);
-    EXPECT_TRUE(machine.choice(1)); // Чай стоит 30
+    EXPECT_TRUE(machine.choice(1));  // Чай стоит 30
     EXPECT_EQ(machine.getState(), WAIT);
 }
 
 TEST_F(AutomataTest, InsufficientFunds) {
     machine.coin(20);
-    EXPECT_FALSE(machine.choice(1)); // Чай стоит 30, не хватает
+    EXPECT_FALSE(machine.choice(1));  // Чай стоит 30, не хватает
     EXPECT_EQ(machine.getState(), ACCEPT);
 }
 
@@ -76,14 +77,14 @@ TEST_F(AutomataTest, CancelOperation) {
 
 TEST_F(AutomataTest, FinishOperation) {
     machine.coin(200);
-    machine.choice(3); // Горячий шоколад стоит 70
-    EXPECT_EQ(machine.getBalance(), 0); // Сдача должна быть возвращена
+    machine.choice(3);  // Горячий шоколад стоит 70
+    EXPECT_EQ(machine.getBalance(), 0);  // Сдача должна быть возвращена
 }
 
 TEST_F(AutomataTest, InvalidChoice) {
     machine.coin(100);
-    EXPECT_FALSE(machine.choice(0)); // Неверный номер
-    EXPECT_FALSE(machine.choice(100)); // Неверный номер
+    EXPECT_FALSE(machine.choice(0));  // Неверный номер
+    EXPECT_FALSE(machine.choice(100));  // Неверный номер
 }
 
 TEST_F(AutomataTest, StateTransitions) {
