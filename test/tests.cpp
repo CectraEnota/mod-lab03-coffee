@@ -3,101 +3,101 @@
 #include "Automata.h"
 
 class AutomataTest : public ::testing::Test {
-protected:
-    Automata machine;
+ protected:
+  Automata machine;
 
-    void SetUp() override {
-        machine.on();
-    }
+  void SetUp() override {
+    machine.on();
+  }
 
-    void TearDown() override {
-        machine.off();
-    }
+  void TearDown() override {
+    machine.off();
+  }
 };
 
 TEST_F(AutomataTest, InitialState) {
-    EXPECT_EQ(machine.getState(), WAIT);
-    EXPECT_EQ(machine.getBalance(), 0);
+  EXPECT_EQ(machine.getState(), WAIT);
+  EXPECT_EQ(machine.getBalance(), 0);
 }
 
 TEST_F(AutomataTest, TurnOnOff) {
-    machine.off();
-    EXPECT_EQ(machine.getState(), OFF);
+  machine.off();
+  EXPECT_EQ(machine.getState(), OFF);
 
-    machine.on();
-    EXPECT_EQ(machine.getState(), WAIT);
+  machine.on();
+  EXPECT_EQ(machine.getState(), WAIT);
 }
 
 TEST_F(AutomataTest, CoinInsertion) {
-    EXPECT_TRUE(machine.coin(20));
-    EXPECT_EQ(machine.getState(), ACCEPT);
-    EXPECT_EQ(machine.getBalance(), 20);
+  EXPECT_TRUE(machine.coin(20));
+  EXPECT_EQ(machine.getState(), ACCEPT);
+  EXPECT_EQ(machine.getBalance(), 20);
 
-    EXPECT_TRUE(machine.coin(50));
-    EXPECT_EQ(machine.getBalance(), 70);
+  EXPECT_TRUE(machine.coin(50));
+  EXPECT_EQ(machine.getBalance(), 70);
 }
 
 TEST_F(AutomataTest, InvalidCoinInsertion) {
-    EXPECT_FALSE(machine.coin(10));  // Меньше минимальной суммы
-    EXPECT_EQ(machine.getBalance(), 0);
+  EXPECT_FALSE(machine.coin(10));  // РњРµРЅСЊС€Рµ РјРёРЅРёРјР°Р»СЊРЅРѕР№ СЃСѓРјРјС‹
+  EXPECT_EQ(machine.getBalance(), 0);
 
-    machine.off();
-    EXPECT_FALSE(machine.coin(20));  // Автомат выключен
+  machine.off();
+  EXPECT_FALSE(machine.coin(20));  // РђРІС‚РѕРјР°С‚ РІС‹РєР»СЋС‡РµРЅ
 }
 
 TEST_F(AutomataTest, GetMenu) {
-    const auto& menu = machine.getMenu();
-    const auto& prices = machine.getPrices();
+  const auto& menu = machine.getMenu();
+  const auto& prices = machine.getPrices();
 
-    ASSERT_FALSE(menu.empty());
-    ASSERT_EQ(menu.size(), prices.size());
+  ASSERT_FALSE(menu.empty());
+  ASSERT_EQ(menu.size(), prices.size());
 
-    EXPECT_EQ(menu[0], "Чай");
-    EXPECT_EQ(prices[0], 30);
+  EXPECT_EQ(menu[0], "Р§Р°Р№");
+  EXPECT_EQ(prices[0], 30);
 }
 
 TEST_F(AutomataTest, SuccessfulChoice) {
-    machine.coin(50);
-    EXPECT_TRUE(machine.choice(1));  // Чай стоит 30
-    EXPECT_EQ(machine.getState(), WAIT);
+  machine.coin(50);
+  EXPECT_TRUE(machine.choice(1));  // Р§Р°Р№ СЃС‚РѕРёС‚ 30
+  EXPECT_EQ(machine.getState(), WAIT);
 }
 
 TEST_F(AutomataTest, InsufficientFunds) {
-    machine.coin(20);
-    EXPECT_FALSE(machine.choice(1));  // Чай стоит 30, не хватает
-    EXPECT_EQ(machine.getState(), ACCEPT);
+  machine.coin(20);
+  EXPECT_FALSE(machine.choice(1));  // Р§Р°Р№ СЃС‚РѕРёС‚ 30, РЅРµ С…РІР°С‚Р°РµС‚
+  EXPECT_EQ(machine.getState(), ACCEPT);
 }
 
 TEST_F(AutomataTest, CancelOperation) {
-    machine.coin(100);
-    EXPECT_EQ(machine.cancel(), 100);
-    EXPECT_EQ(machine.getBalance(), 0);
-    EXPECT_EQ(machine.getState(), WAIT);
+  machine.coin(100);
+  EXPECT_EQ(machine.cancel(), 100);
+  EXPECT_EQ(machine.getBalance(), 0);
+  EXPECT_EQ(machine.getState(), WAIT);
 }
 
 TEST_F(AutomataTest, FinishOperation) {
-    machine.coin(200);
-    machine.choice(3);  // Горячий шоколад стоит 70
-    EXPECT_EQ(machine.getBalance(), 0);  // Сдача должна быть возвращена
+  machine.coin(200);
+  machine.choice(3);  // Р“РѕСЂСЏС‡РёР№ С€РѕРєРѕР»Р°Рґ СЃС‚РѕРёС‚ 70
+  EXPECT_EQ(machine.getBalance(), 0);  // РЎРґР°С‡Р° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РІРѕР·РІСЂР°С‰РµРЅР°
 }
 
 TEST_F(AutomataTest, InvalidChoice) {
-    machine.coin(100);
-    EXPECT_FALSE(machine.choice(0));  // Неверный номер
-    EXPECT_FALSE(machine.choice(100));  // Неверный номер
+  machine.coin(100);
+  EXPECT_FALSE(machine.choice(0));  // РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ
+  EXPECT_FALSE(machine.choice(100));  // РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ
 }
 
 TEST_F(AutomataTest, StateTransitions) {
-    EXPECT_EQ(machine.getState(), WAIT);
+  EXPECT_EQ(machine.getState(), WAIT);
 
-    machine.coin(20);
-    EXPECT_EQ(machine.getState(), ACCEPT);
+  machine.coin(20);
+  EXPECT_EQ(machine.getState(), ACCEPT);
 
-    machine.coin(20);
-    machine.choice(1);
-    EXPECT_EQ(machine.getState(), WAIT);
+  machine.coin(20);
+  machine.choice(1);
+  EXPECT_EQ(machine.getState(), WAIT);
 }
 
 TEST_F(AutomataTest, MinimumCoinRequirement) {
-    EXPECT_EQ(machine.getMinCoin(), 20);
+  EXPECT_EQ(machine.getMinCoin(), 20);
 }
